@@ -1,0 +1,14 @@
+{
+  "name": "shopapp",
+  "version": "1.0.0",
+  "description": "shoping website",
+  "main": "server.js",
+  "scripts": {
+    "start": "node backend/server"
+  },
+  "author": "Sviatoslav Sprun",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
