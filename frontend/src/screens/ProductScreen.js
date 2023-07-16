@@ -1,12 +1,30 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Row, Col, Image, ListGroup, Card, Button } from "react-bootstrap";
 import Rating from "../components/Rating";
-import products from "../products";
+import axios from "axios";
 
-const ProductScreen = ({ match }) => {
+const ProductScreen = () => {
   const { id } = useParams();
-  const product = products.find((p) => p._id === id);
+
+  const [product, setProduct] = useState({});
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const { data } = await axios.get(
+          `http://localhost:5000/api/products/${id}`
+        );
+
+        setProduct(data);
+      } catch (error) {
+        // Handle error
+        console.log(error);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
 
   return (
     <>
@@ -24,8 +42,8 @@ const ProductScreen = ({ match }) => {
             </ListGroup.Item>
             <ListGroup.Item>
               <Rating
-                value={product.rating}
-                text={`${product.numReviews} reviews`}
+                value={product.rating || 0}
+                text={`${product.numReviews || 0} reviews`}
               />
             </ListGroup.Item>
             <ListGroup.Item>Price: ${product.price}</ListGroup.Item>
@@ -45,7 +63,7 @@ const ProductScreen = ({ match }) => {
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
-                  <Col>Stats:</Col>
+                  <Col>Status:</Col>
                   <Col>
                     {product.countInStock > 0 ? "In Stock" : "Out of Stock"}
                   </Col>
