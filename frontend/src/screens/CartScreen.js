@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link, useParams } from "react-router-dom"; // Используем useParams
+import { Link, useParams, useLocation } from "react-router-dom"; // Добавлено useLocation
 import { useDispatch, useSelector } from "react-redux";
 import {
   Row,
@@ -13,12 +13,18 @@ import {
 import Message from "../components/Message";
 import { addToCart } from "../actions/cartActions";
 
-const CartScreen = ({ location, history }) => {
+const CartScreen = ({ history }) => {
   const { id: productId } = useParams();
-  const qty = location.search
-    ? Number(new URLSearchParams(location.search).get("qty"))
+  const navigate = useLocation();
+  const qty = navigate.search
+    ? Number(new URLSearchParams(navigate.search).get("qty"))
     : 1;
   const dispatch = useDispatch();
+
+  const cart = useSelector((state) => state.cart);
+  const { cartItems } = cart;
+
+  console.log(cartItems);
 
   useEffect(() => {
     if (productId) {
