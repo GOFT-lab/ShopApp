@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { getUserDetails } from "../actions/userActions";
 
-const ProfileScreen = ({}) => {
+const ProfileScreen = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,14 +29,14 @@ const ProfileScreen = ({}) => {
     if (!userInfo) {
       navigate("/login");
     } else {
-      if (!user.name) {
+      if (!user || !user.name) {
         dispatch(getUserDetails("profile"));
       } else {
         setName(user.name);
         setEmail(user.email);
       }
     }
-  }, [dispatch, navigate, userInfo]);
+  }, [dispatch, navigate, userInfo, user]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -62,7 +62,6 @@ const ProfileScreen = ({}) => {
               placeholder='Enter name'
               value={name}
               onChange={(e) => setName(e.target.value)}
-              autoComplete='name'
             />
           </Form.Group>
 
@@ -73,7 +72,6 @@ const ProfileScreen = ({}) => {
               placeholder='Enter email'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              autoComplete='email'
             />
           </Form.Group>
 
@@ -84,7 +82,6 @@ const ProfileScreen = ({}) => {
               placeholder='Password'
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              autoComplete='current-password'
             />
           </Form.Group>
 
@@ -95,7 +92,6 @@ const ProfileScreen = ({}) => {
               placeholder='Confirm Password'
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              autoComplete='current-password'
             />
           </Form.Group>
 
