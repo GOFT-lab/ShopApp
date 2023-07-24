@@ -12,6 +12,7 @@ import {
 } from "react-bootstrap";
 import Message from "../components/Message";
 import { addToCart, removeFromCart } from "../actions/cartActions";
+import { getUserDetails } from "../actions/userActions";
 
 const CartScreen = () => {
   const { id: productId } = useParams();
@@ -22,6 +23,10 @@ const CartScreen = () => {
 
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
+
+  const userLogin = useSelector((state) => state.userLogin);
+
+  const { userInfo } = userLogin;
 
   console.log(cartItems);
 
@@ -36,7 +41,10 @@ const CartScreen = () => {
   };
 
   const checkoutHandler = () => {
-    navigate("/login?redirect=shipping");
+    dispatch(getUserDetails);
+    if (!userInfo) {
+      navigate("/login");
+    } else navigate("/shipping", { replace: true });
   };
 
   return (

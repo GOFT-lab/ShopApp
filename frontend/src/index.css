@@ -16,3 +16,9 @@ h1 {
 .rating span {
   margin: 0.1rem;
 }
+.formLabel {
+  margin-top: 10px;
+}
+.button {
+  margin-top: 15px;
+}
