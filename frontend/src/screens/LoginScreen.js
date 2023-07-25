@@ -60,7 +60,12 @@ const LoginScreen = ({ location }) => {
             autoComplete='current-password'
           />
         </Form.Group>
-        <Button type='submit' variant='primary' aria-label='Sign In'>
+        <Button
+          className='button'
+          type='submit'
+          variant='primary'
+          aria-label='Sign In'
+        >
           Sign In
         </Button>
       </Form>
