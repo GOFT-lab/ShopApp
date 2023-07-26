@@ -6,6 +6,9 @@ import Message from "../components/Message";
 import CheckoutSteps from "../components/CheckoutSteps";
 
 const PlaceOrderScreen = () => {
+  const addDecimals = (num) => {
+    return (Math.round(num * 100) / 100).toFixed(2);
+  };
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
   const [message, setMessage] = useState(null);
@@ -15,16 +18,14 @@ const PlaceOrderScreen = () => {
   }
   const storedData = JSON.parse(storedDataString);
 
-  cart.itemsPrice = cart.cartItems.reduce(
-    (acc, item) => acc + item.price * item.qty,
-    0
+  cart.itemsPrice = addDecimals(
+    cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
   );
-  cart.shippingPrice = Number(cart.itemsPrice) > 100 ? 0 : 100;
-  cart.taxPrice = Number((0.15 * cart.itemsPrice).toFixed(2));
-  cart.totalPrice =
-    Number(cart.shippingPrice) +
-    Number(cart.taxPrice) +
-    Number(cart.itemsPrice);
+  cart.shippingPrice = addDecimals(Number(cart.itemsPrice) > 100 ? 0 : 100);
+  cart.taxPrice = addDecimals(Number((0.15 * cart.itemsPrice).toFixed(2)));
+  cart.totalPrice = addDecimals(
+    Number(cart.shippingPrice) + Number(cart.taxPrice) + Number(cart.itemsPrice)
+  );
 
   const placeOrderHandler = () => {};
 
