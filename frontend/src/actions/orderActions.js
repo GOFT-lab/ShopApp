@@ -22,7 +22,7 @@ export const createOrder = (order) => async (dispatch, getState) => {
       },
     };
     const { data } = await axios.post(
-      `http://localhost:5000/api/users/orders`,
+      `http://localhost:5000/api/orders`,
       order,
       config
     );

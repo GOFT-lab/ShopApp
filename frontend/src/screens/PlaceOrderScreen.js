@@ -15,11 +15,13 @@ const PlaceOrderScreen = () => {
   const cart = useSelector((state) => state.cart);
   const [message, setMessage] = useState(null);
   const storedDataString = localStorage.getItem("paymentMethod");
+  let storedData = null;
   if (!storedDataString) {
-    setMessage("Password do not munch");
+    setMessage("Payment method is not available");
+  } else {
+    storedData = JSON.parse(storedDataString);
+    cart.paymentMethod = storedData.paymentMethod;
   }
-  const storedData = JSON.parse(storedDataString);
-
   cart.itemsPrice = addDecimals(
     cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
   );
