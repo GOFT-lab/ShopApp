@@ -7,26 +7,22 @@ import Loader from "../components/Loader";
 import FormContainer from "../components/FormContainer";
 import { login } from "../actions/userActions";
 
-const LoginScreen = ({ location }) => {
+const LoginScreen = ({ location, history }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
   const userLogin = useSelector((state) => state.userLogin);
-
   const { loading, error, userInfo } = userLogin;
 
-  const redirect = window.location.search
-    ? window.location.search.split("=")[1]
-    : "/";
+  const redirect = location.search ? location.search.split("=")[1] : "/";
+
   useEffect(() => {
     if (userInfo) {
-      navigate(redirect);
+      history.push(redirect);
     }
-  }, [navigate, userInfo, redirect]);
+  }, [history, userInfo, redirect]);
 
   const submitHandler = (e) => {
     e.preventDefault();

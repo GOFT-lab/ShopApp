@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Row,
@@ -11,26 +11,42 @@ import {
   Form,
 } from "react-bootstrap";
 import Rating from "../components/Rating";
-import { listProductDetails } from "../actions/productActions";
-import Loader from "../components/Loader";
 import Message from "../components/Message";
+import Loader from "../components/Loader";
+import { listProductDetails } from "../actions/productActions";
 
-const ProductScreen = () => {
-  const { id } = useParams();
+const ProductScreen = ({ history, match }) => {
   const [qty, setQty] = useState(1);
-  const navigate = useNavigate();
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
+
+  const dispatch = useDispatch();
 
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
 
-  const dispatch = useDispatch();
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  const productReviewCreate = useSelector((state) => state.productReviewCreate);
+  const {
+    success: successProductReview,
+    loading: loadingProductReview,
+    error: errorProductReview,
+  } = productReviewCreate;
 
   useEffect(() => {
-    dispatch(listProductDetails(id));
-  }, [dispatch, id]);
+    if (successProductReview) {
+      setRating(0);
+      setComment("");
+    }
+    if (!product._id || product._id !== match.params.id) {
+      dispatch(listProductDetails(match.params.id));
+    }
+  }, [dispatch, match, successProductReview]);
 
   const addToCartHandler = () => {
-    navigate(`/cart/${id}?qty=${qty}`);
+    history.push(`/cart/${match.params.id}?qty=${qty}`);
   };
 
   return (

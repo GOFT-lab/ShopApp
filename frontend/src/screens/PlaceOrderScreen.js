@@ -1,44 +1,46 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Button, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import CheckoutSteps from "../components/CheckoutSteps";
 import { createOrder } from "../actions/orderActions";
 
-const PlaceOrderScreen = () => {
+const PlaceOrderScreen = ({ history }) => {
+  const dispatch = useDispatch();
+
+  const cart = useSelector((state) => state.cart);
+
+  if (!cart.shippingAddress.address) {
+    history.push("/shipping");
+  } else if (!cart.paymentMethod) {
+    history.push("/payment");
+  }
+  //   Calculate prices
   const addDecimals = (num) => {
     return (Math.round(num * 100) / 100).toFixed(2);
   };
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const cart = useSelector((state) => state.cart);
-  const [message, setMessage] = useState(null);
-  const storedDataString = localStorage.getItem("paymentMethod");
-  let storedData = null;
-  if (!storedDataString) {
-    setMessage("Payment method is not available");
-  } else {
-    storedData = JSON.parse(storedDataString);
-    cart.paymentMethod = storedData.paymentMethod;
-  }
+
   cart.itemsPrice = addDecimals(
     cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
   );
-  cart.shippingPrice = addDecimals(Number(cart.itemsPrice) > 100 ? 0 : 100);
+  cart.shippingPrice = addDecimals(cart.itemsPrice > 100 ? 0 : 100);
   cart.taxPrice = addDecimals(Number((0.15 * cart.itemsPrice).toFixed(2)));
-  cart.totalPrice = addDecimals(
-    Number(cart.shippingPrice) + Number(cart.taxPrice) + Number(cart.itemsPrice)
-  );
+  cart.totalPrice = (
+    Number(cart.itemsPrice) +
+    Number(cart.shippingPrice) +
+    Number(cart.taxPrice)
+  ).toFixed(2);
 
   const orderCreate = useSelector((state) => state.orderCreate);
   const { order, success, error } = orderCreate;
 
   useEffect(() => {
-    if (success && order && order._id) {
-      navigate(`/order/${order._id}`);
+    if (success) {
+      history.push(`/order/${order._id}`);
     }
-  }, [navigate, success, order]);
+    // eslint-disable-next-line
+  }, [history, success]);
 
   const placeOrderHandler = () => {
     dispatch(
@@ -63,20 +65,21 @@ const PlaceOrderScreen = () => {
             <ListGroup.Item>
               <h2>Shipping</h2>
               <p>
-                <strong>Address:</strong> {cart.shippingAddress.address},{" "}
-                {cart.shippingAddress.city}, {cart.shippingAddress.postalCode},{" "}
+                <strong>Address:</strong>
+                {cart.shippingAddress.address}, {cart.shippingAddress.city}{" "}
+                {cart.shippingAddress.postalCode},{" "}
                 {cart.shippingAddress.country}
               </p>
             </ListGroup.Item>
+
             <ListGroup.Item>
               <h2>Payment Method</h2>
-              <strong>Method:</strong>{" "}
-              {message && <Message variant='danger'>{message}</Message>}
-              {storedData.paymentMethod}
+              <strong>Method: </strong>
+              {cart.paymentMethod}
             </ListGroup.Item>
+
             <ListGroup.Item>
               <h2>Order Items</h2>
-              <strong>Method:</strong>{" "}
               {cart.cartItems.length === 0 ? (
                 <Message>Your cart is empty</Message>
               ) : (
@@ -143,8 +146,8 @@ const PlaceOrderScreen = () => {
               </ListGroup.Item>
               <ListGroup.Item>
                 <Button
-                  className='btn-block'
                   type='button'
+                  className='btn-block'
                   disabled={cart.cartItems === 0}
                   onClick={placeOrderHandler}
                 >
