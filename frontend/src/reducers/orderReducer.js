@@ -11,6 +11,7 @@ import {
   ORDER_PAY_SUCCESS,
   ORDER_USER_FAIL,
   ORDER_USER_REQUEST,
+  ORDER_USER_RESET,
   ORDER_USER_SUCCESS,
 } from "../constants/orderConstants";
 
@@ -100,7 +101,8 @@ export const orderUserReducer = (state = { orders: [] }, action) => {
         loading: false,
         error: action.payload,
       };
-
+    case ORDER_USER_RESET:
+      return { orders: [] };
     default:
       return state;
   }
