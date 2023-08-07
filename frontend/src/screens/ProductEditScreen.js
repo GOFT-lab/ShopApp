@@ -139,8 +139,9 @@ const ProductEditScreen = ({ match, history }) => {
                 autoComplete='image'
               />
               <Form.File
+                className='imageUpload'
                 id='image-file'
-                label='Choose File   '
+                label='Choose Fileㅤ'
                 onChange={uploadFileHandler}
               ></Form.File>
               {uploading && <Loader />}
