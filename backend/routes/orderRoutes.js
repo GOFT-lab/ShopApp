@@ -3,6 +3,7 @@ import {
   addOrderItems,
   getOrderItemsById,
   updateOrderItemsToPaid,
+  updateOrderToDelivered,
   getMyOrders,
   getOrders,
 } from "../controllers/orderController.js";
@@ -13,5 +14,6 @@ router.route("/").post(protect, addOrderItems).get(protect, admin, getOrders);
 router.route("/myorders").get(protect, getMyOrders);
 router.route("/:id").get(protect, getOrderItemsById);
 router.route("/:id/pay").put(protect, updateOrderItemsToPaid);
+router.route("/:id/deliver").put(protect, admin, updateOrderToDelivered);
 
 export default router;
