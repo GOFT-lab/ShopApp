@@ -1,27 +1,9 @@
-main {
-  min-height: 80vh;
+.custom-button {
+  margin-left: 10px;
 }
-h3 {
-  padding: 0.5rem 0;
+.navbar {
+  font-size: 14px;
 }
-
-h2 {
-  font-size: 1.4rem;
-  padding: 0.5rem 0;
-}
-h1 {
-  font-size: 1.8 rem;
-  padding: 1rem 0;
-}
-.rating span {
-  margin: 0.1rem;
-}
-.formLabel {
-  margin-top: 10px;
-}
-.button {
-  margin-top: 15px;
-}
-.imageUpload {
-  margin-right: 15px;
+.navbar-nav.ml-auto {
+  margin-left: auto;
 }
